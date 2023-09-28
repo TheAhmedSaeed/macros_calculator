@@ -4,6 +4,8 @@ import base64
 from io import BytesIO
 import datetime
 
+from translations.translations import TEXTS
+
 
 
 # Utility function to manage session state
@@ -54,47 +56,58 @@ def calculate_tdee(height, weight, age, sex, activity_level):
 
 # Main app
 _get_state()
+language = st.selectbox('Choose your language / اختر لغتك', ['en', 'ar'])
+# If the selected language is Arabic, apply right-to-left text direction
+if language == 'ar':
+    st.markdown("""
+        <style>
+            * {
+                direction: rtl;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+texts = TEXTS[language]
+st.title(texts['title'])
 
-st.title("Calories and Macros Calculator")
-if(st.button("Next")):
+if(st.button(texts['next'])):
     st.session_state.step += 1
     if(st.session_state.step == 2):
         st.session_state.last_next_was_clicked = True
 
 if st.session_state.step:
-    if st.button("Back"):
+    if st.button(texts['back']):
         st.session_state.step -= 1
 progress_bar = st.progress(st.session_state.step / 3)
 
 
 
 if st.session_state.step == 0:
-    st.header("Welcome to the Calorie and Macronutrient Calculator!")
-    st.write("Click 'Start' to begin.")
+    st.header(texts['welcome_header'])
+    st.write(texts['click_start'])
 
         
 
 elif st.session_state.step == 1:
 
-    st.header("Basic Information")
-    st.session_state.weight = st.number_input("Enter your weight (kg)", value=st.session_state.weight, min_value=0.0)
-    st.session_state.body_fat_percentage = st.number_input("Enter your body fat percentage (%)", value=st.session_state.body_fat_percentage, min_value=0.0, max_value=100.0)
+    st.header(texts['basic_info_header'])
+    st.session_state.weight = st.number_input(texts['enter_weight'], value=st.session_state.weight, min_value=0.0)
+    st.session_state.body_fat_percentage = st.number_input(texts['enter_body_fat'], value=st.session_state.body_fat_percentage, min_value=0.0, max_value=100.0)
     lbm = calculate_lbm(st.session_state.weight, st.session_state.body_fat_percentage)
-    st.write(f"Your lean body mass is {lbm:.2f} kg")
+    st.write(f"{texts['your_lbm']} {lbm:.2f} kg")
     
 
 elif st.session_state.step == 2:
-    st.header("Calculate Your Energy Expenditure")
-    st.session_state.has_smartwatch = st.radio("Do you have a smartwatch?", ["Yes", "No"], index=0 if st.session_state.has_smartwatch == "Yes" else 1)
+    st.header(texts['calculate_energy_header'])
+    st.session_state.has_smartwatch = st.radio(texts['have_smartwatch'], ["Yes", "No"], index=0 if st.session_state.has_smartwatch == "Yes" else 1)
 
     if st.session_state.has_smartwatch == "Yes":
-        st.session_state.resting_energy = st.number_input("Enter your Resting Energy (kcal)", value=st.session_state.resting_energy, min_value=0.0)
-        st.session_state.active_energy = st.number_input("Enter your Active Energy (kcal)", value=st.session_state.active_energy, min_value=0.0)
+        st.session_state.resting_energy = st.number_input(texts['enter_resting_energy'], value=st.session_state.resting_energy, min_value=0.0)
+        st.session_state.active_energy = st.number_input(texts['enter_active_energy'], value=st.session_state.active_energy, min_value=0.0)
     else:
-        st.session_state.height = st.number_input("Enter your height (cm)", value=st.session_state.height, min_value=0.0)
-        st.session_state.age = st.number_input("Enter your age", value=st.session_state.age, min_value=0)
-        st.session_state.sex = st.radio("Select your sex", ["Male", "Female"], index=0 if st.session_state.sex == "Male" else 1)
-        st.session_state.activity_level = st.selectbox("Select your activity level", [
+        st.session_state.height = st.number_input(texts['enter_height'], value=st.session_state.height, min_value=0.0)
+        st.session_state.age = st.number_input(texts['enter_age'], value=st.session_state.age, min_value=0)
+        st.session_state.sex = st.radio(texts['select_sex'], ["Male", "Female"], index=0 if st.session_state.sex == "Male" else 1)
+        st.session_state.activity_level = st.selectbox(texts['select_activity_level'], [
             'Sedentary (little to no exercise)',
             'Lightly active (light exercise/sports 1-3 days/week)',
             'Moderately active (moderate exercise/sports 3-5 days/week)',
@@ -105,15 +118,12 @@ elif st.session_state.step == 2:
 
 
 elif st.session_state.step == 3:
-    st.header("Macronutrient Distribution")
-    st.session_state.calorie_deficit = st.slider("How much do you want to reduce your daily intake? (kcal)", value=st.session_state.calorie_deficit, min_value=0, max_value=500)
-    st.session_state.protein_factor = st.slider("How much protein do you want to include? (g per kg of LBM)", value=st.session_state.protein_factor, min_value=1.6, max_value=3.4)
-    if st.button("Need a hint for protein intake?"):
-        st.write("""
-        - Maintenance or moderate activity: 1.6 to 2.2 g/kg of LBM
-        - High-intensity training or muscle gain goals: 2.2 to 3.4 g/kg of LBM
-        """)
-    st.session_state.fat_factor = st.slider("What percentage of your daily intake should be fat?", value=int(st.session_state.fat_factor), min_value=20, max_value=35)
+    st.header(texts["macronutrient_distribution_header"])
+    st.session_state.calorie_deficit = st.slider(texts['reduce_daily_intake'], value=st.session_state.calorie_deficit, min_value=0, max_value=500)
+    st.session_state.protein_factor = st.slider(texts['include_protein'], value=st.session_state.protein_factor, min_value=1.6, max_value=3.4)
+    if st.button(texts['hint_protein_intake']):
+        st.write(texts['protein_hint_text'])
+    st.session_state.fat_factor = st.slider(texts['daily_intake_fat'], value=int(st.session_state.fat_factor), min_value=20, max_value=35)
     
 
     if st.session_state.has_smartwatch == "Yes":
@@ -128,10 +138,10 @@ elif st.session_state.step == 3:
     fat = tdee * st.session_state.fat_factor / 100 / 9
     carbs = (adjusted_tdee - (protein * 4 + fat * 9)) / 4
 
-    st.write(f"You should consume {adjusted_tdee:.2f} kcal daily.")
-    st.write(f"Protein: {protein:.2f} g")
-    st.write(f"Fat: {fat:.2f} g")
-    st.write(f"Carbohydrates: {carbs:.2f} g")
+    st.write(f"{texts['consume_daily']} {adjusted_tdee:.2f} {texts['kcal_daily']}.")
+    st.write(f"{texts['protein']}: {protein:.2f} {texts['g']}") 
+    st.write(f"{texts['fat']} {fat:.2f} {texts['g']}")
+    st.write(f"{texts['carbohydrates']} {carbs:.2f} {texts['g']}")
 
     fig, ax = plt.subplots()
     ax.axis('off')
@@ -142,13 +152,13 @@ elif st.session_state.step == 3:
     st.pyplot(fig)
     
     # Add an "Export as PNG" button
-    if st.button("Export as PNG"):
+    if st.button(texts['export_as_png']):
         # add the data of today as Wed 09/09/2020
         todayDate = datetime.date.today().strftime("%a %d/%m/%Y")
         fig.text(0.5, 0.05, f"Generated on {todayDate}", ha='center')
         fileName = f"calorie_info_{todayDate}.png"
-        st.markdown(get_image_download_link(fig, fileName, "Click here to download"), unsafe_allow_html=True)
-        st.write("Macronutrient information has been saved as 'macronutrient_info.png'")
+        st.markdown(get_image_download_link(fig, fileName, texts['click_here_to_download']), unsafe_allow_html=True)
+        st.write(texts['macronutrient_info_saved'])
     
 
 
