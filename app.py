@@ -56,25 +56,32 @@ def calculate_tdee(height, weight, age, sex, activity_level):
 _get_state()
 
 st.title("Calories and Macros Calculator")
-progress_bar = st.progress(st.session_state.step / 4)
+if(st.button("Next")):
+    st.session_state.step += 1
+    if(st.session_state.step == 2):
+        st.session_state.last_next_was_clicked = True
+
+if st.session_state.step:
+    if st.button("Back"):
+        st.session_state.step -= 1
+progress_bar = st.progress(st.session_state.step / 3)
+
+
 
 if st.session_state.step == 0:
     st.header("Welcome to the Calorie and Macronutrient Calculator!")
     st.write("Click 'Start' to begin.")
-    if st.button("Start"):
-        st.session_state.step = 1
+
         
 
 elif st.session_state.step == 1:
+
     st.header("Basic Information")
     st.session_state.weight = st.number_input("Enter your weight (kg)", value=st.session_state.weight, min_value=0.0)
     st.session_state.body_fat_percentage = st.number_input("Enter your body fat percentage (%)", value=st.session_state.body_fat_percentage, min_value=0.0, max_value=100.0)
     lbm = calculate_lbm(st.session_state.weight, st.session_state.body_fat_percentage)
     st.write(f"Your lean body mass is {lbm:.2f} kg")
-    if st.button("Next_1"):
-        st.session_state.step += 1
-    if st.session_state.step > 0 and st.button("Back_1"):
-        st.session_state.step -= 1
+    
 
 elif st.session_state.step == 2:
     st.header("Calculate Your Energy Expenditure")
@@ -95,10 +102,7 @@ elif st.session_state.step == 2:
             'Super active (very hard exercise, physical job, or training twice a day)'
         ], index=['Sedentary (little to no exercise)', 'Lightly active (light exercise/sports 1-3 days/week)', 'Moderately active (moderate exercise/sports 3-5 days/week)', 'Very active (hard exercise/sports 6-7 days a week)', 'Super active (very hard exercise, physical job, or training twice a day)'].index(st.session_state.activity_level))
 
-    if st.button("Next_2"):
-        st.session_state.step += 1
-    if st.session_state.step > 0 and st.button("Back_2"):
-        st.session_state.step -= 1
+
 
 elif st.session_state.step == 3:
     st.header("Macronutrient Distribution")
@@ -146,9 +150,7 @@ elif st.session_state.step == 3:
         st.markdown(get_image_download_link(fig, fileName, "Click here to download"), unsafe_allow_html=True)
         st.write("Macronutrient information has been saved as 'macronutrient_info.png'")
     
-    if st.button("Finish"):
-        st.session_state.step = 0
-    if st.session_state.step > 0 and st.button("Back_3"):
-        st.session_state.step -= 1
 
-progress_bar.progress(st.session_state.step / 4)
+
+progress_bar.progress(st.session_state.step / 3)
+
