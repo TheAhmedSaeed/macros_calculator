@@ -149,6 +149,9 @@ if language:
         fat = tdee * st.session_state.fat_factor / 100 / 9
         carbs = (adjusted_tdee - (protein * 4 + fat * 9)) / 4
 
+        st.markdown("[![Buy Me A Coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=ahmedsaeed&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff)](https://www.buymeacoffee.com/ahmedsaeed)")
+
+
         st.write(f"{texts['consume_daily']} {adjusted_tdee:.2f} {texts['kcal_daily']}.")
         st.write(f"{texts['protein']}: {protein:.2f} {texts['g']}") 
         st.write(f"{texts['fat']} {fat:.2f} {texts['g']}")
