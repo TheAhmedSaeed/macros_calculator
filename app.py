@@ -5,6 +5,7 @@ from io import BytesIO
 import datetime
 
 from translations.translations import TEXTS
+from utils import get_pdf_download_link
 
 
 
@@ -21,7 +22,7 @@ def _get_state():
         st.session_state.age = 0
         st.session_state.sex = "Male"
         st.session_state.activity_level = 'Sedentary (little to no exercise)'
-        st.session_state.calorie_deficit = 0
+        st.session_state.calorie_deficit = 250
         st.session_state.protein_factor = 1.6
         st.session_state.fat_factor = 20.0
 
@@ -110,10 +111,16 @@ if language:
     elif st.session_state.step == 2:
         st.header(texts['calculate_energy_header'])
         st.session_state.has_smartwatch = st.radio(texts['have_smartwatch'], ["Yes", "No"], index=0 if st.session_state.has_smartwatch == "Yes" else 1)
-
+        
+        
         if st.session_state.has_smartwatch == "Yes":
             st.session_state.resting_energy = st.number_input(texts['enter_resting_energy'], value=st.session_state.resting_energy, min_value=0.0)
             st.session_state.active_energy = st.number_input(texts['enter_active_energy'], value=st.session_state.active_energy, min_value=0.0)
+            if st.button(texts['smart_watch_help']):
+                # PDF file path
+                pdf_path = 'assets/health_app_energy.pdf'
+                # Generate the download link and display it
+                st.markdown(get_pdf_download_link(pdf_path, "health_app_energy"), unsafe_allow_html=True)
         else:
             st.session_state.height = st.number_input(texts['enter_height'], value=st.session_state.height, min_value=0.0)
             st.session_state.age = st.number_input(texts['enter_age'], value=st.session_state.age, min_value=0)

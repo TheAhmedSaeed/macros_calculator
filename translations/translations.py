@@ -49,7 +49,8 @@ TEXTS = {
         'g': 'g',
         'export_as_png': 'Export as PNG',
         'click_here_to_download': 'Click here to download',
-        'macronutrient_info_saved': "Macros information has been saved as 'macronutrient_info.png'"
+        'macronutrient_info_saved': "Macros information has been saved as 'macronutrient_info.png'",
+        "smart_watch_help": "Need help with getting the data from your iphone?"
     },
     'ar': {
         'title': 'حاسبة السعرات الحرارية والماكروس',
@@ -101,6 +102,7 @@ TEXTS = {
         'g': 'جم',
         'export_as_png': 'تصدير كصورة PNG',
         'click_here_to_download': 'انقر هنا للتحميل',
-        'macronutrient_info_saved': "تم حفظ معلومات المغذيات الصغرى كـ 'macronutrient_info.png'"
+        'macronutrient_info_saved': "تم حفظ معلومات المغذيات الصغرى كـ 'macronutrient_info.png'",
+        "smart_watch_help": "هل تحتاج إلى مساعدة في الحصول على البيانات من جهازك الايفون؟"
     }
 }
