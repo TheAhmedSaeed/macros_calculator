@@ -138,10 +138,15 @@ if language:
     elif st.session_state.step == 3:
         st.header(texts["macronutrient_distribution_header"])
         st.session_state.calorie_deficit = st.slider(texts['reduce_daily_intake'], value=st.session_state.calorie_deficit, min_value=0, max_value=500)
+        if(st.button(texts['need_hint_for_reducing_daily_intake'])):
+            st.info(texts['reduce_daily_intake_hint'])
         st.session_state.protein_factor = st.slider(texts['include_protein'], value=st.session_state.protein_factor, min_value=1.6, max_value=3.4)
         if st.button(texts['hint_protein_intake']):
             st.write(texts['protein_hint_text'])
         st.session_state.fat_factor = st.slider(texts['daily_intake_fat'], value=int(st.session_state.fat_factor), min_value=20, max_value=35)
+        if st.button(texts['need_hint_for_fat_intake']):
+            st.info(texts['hint_for_fat_intake'])
+        
         
 
         if st.session_state.has_smartwatch == "Yes":
